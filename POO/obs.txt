@@ -1,0 +1,5 @@
+alguns assuntos relacionados a disciplina que serão de bastante interesse:
+Programação Assicrona e Gerenciamento de Status.
+
+Linguagem supostamente usada: Flutter/Dart
+Codigos feitos no vscode
