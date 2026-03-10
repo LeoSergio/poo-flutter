@@ -2,64 +2,52 @@ import 'package:flutter/material.dart';
 
 void main() {
   MaterialApp app = MaterialApp(
-    theme: ThemeData
-      (primarySwatch: Colors.teal,
-      fontFamily: 'Georgia', // Define a fonte padrão para o app INTEIRO
-        
-        // Também podemos customizar partes específicas do texto
-      textTheme: const TextTheme(
-      bodyMedium: TextStyle(fontSize: 18.0), // Texto padrão do corpo
-        ),
-      ),
-      
+    theme: ThemeData(
+      primarySwatch: Colors.indigo, // Um tom mais "cinema"
+      fontFamily: 'Georgia',
+    ),
     home: Scaffold(
       appBar: AppBar(
-        title: Text("Filmes",
-        style: TextStyle(
-                fontWeight: FontWeight.bold, // Deixa em negrito
-                fontFamily: 'monospace',     // Altera a família da fonte
-                fontSize: 24,
-        ),
-        ),
-          
+        title: const Text("Filmes Favoritos"),
       ),
-      body:  Center(
-        child: Column(
-          children: [
-            Text("Apenas começando..."),
-            Text("No meio..."),
-            Text("Terminando..."),
-
-            Image.network(
-              'https://m.media-amazon.com/images/I/51v5ZpFyaFL._AC_.jpg',
-              height: 300
-            )
-          ],
+      body: SingleChildScrollView( // Adicionado para garantir que caiba em telas menores
+        child: Center(
+          child: DataTable(
+            columns: const [
+              DataColumn(label: Text("Título", style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(label: Text("Gênero", style: TextStyle(fontWeight: FontWeight.bold))),
+              DataColumn(label: Text("Nota", style: TextStyle(fontWeight: FontWeight.bold))),
+            ],
+            rows: const [
+              DataRow(cells: [
+                DataCell(Text("O Poderoso Chefão")),
+                DataCell(Text("Crime/Drama")),
+                DataCell(Text("9.2")),
+              ]),
+              DataRow(cells: [
+                DataCell(Text("Interestelar")),
+                DataCell(Text("Ficção Científica")),
+                DataCell(Text("8.7")),
+              ]),
+              DataRow(cells: [
+                DataCell(Text("Vingadores Ultimato")),
+                DataCell(Text("Ficção Científica")),
+                DataCell(Text("8.9")),
+              ]),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: Row(
-  children: [
-    Expanded(
-      child: ElevatedButton(onPressed: () {}, child: const Text("Anterior")),
-    ),
-    Expanded(
-      child: IconButton(
-        icon: const Icon(Icons.favorite),
-        color: Colors.red,
-        onPressed: () {},
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          IconButton(icon: const Icon(Icons.home), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+          IconButton(icon: const Icon(Icons.settings), onPressed: () {}),
+        ],
       ),
-    ),
-    Expanded(
-      child: ElevatedButton(onPressed: () {}, child: const Text("Próximo")),
-    ),
-  ],
-),
     ),
   );
 
   runApp(app);
 }
-
-//questão 7
-
-//questão 7 e 8
