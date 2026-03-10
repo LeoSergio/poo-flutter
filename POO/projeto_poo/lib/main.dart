@@ -26,10 +26,20 @@ void main() {
       bottomNavigationBar: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,//Espaço entre os itens
         children: [
-          Text("Botão 1"),
-          Text("Botão 2"),
-          Text("Botão 3"),
-        ],
+            ElevatedButton(
+              onPressed: () => print("Clicou no 1"),
+              child: const Text("Botão 1")
+            ),
+            ElevatedButton(
+              onPressed: () => print("Clicou no 2"),
+              child: const Text("Botão 2")
+            ),
+            ElevatedButton(
+              onPressed: () => print("Clicou no 3"),
+              child: const Text("Botão 3")
+            ),
+            
+          ],
       )
     ),
   );
