@@ -1,16 +1,32 @@
 import 'package:flutter/material.dart';
+//exercicio 2 feito, ir para o 3.
 
 void main() {
   MaterialApp app = MaterialApp(
-    theme: ThemeData(primarySwatch: Colors.deepPurple),
+    theme: ThemeData(primarySwatch: Colors.teal), // <-- Nova cor aqui!
     home: Scaffold(
       appBar: AppBar(
-        title: const Text("Meu app"),
+        title: Text("Filmes",
+        style: TextStyle(
+                fontWeight: FontWeight.bold, // Deixa em negrito
+                fontFamily: 'monospace',     // Altera a família da fonte
+                fontSize: 24,
+        ),
+        ),
+          
       ),
-      body: const Text("Apenas começando..."),
+      body:  Center(
+        child: Column(
+          children: [
+            Text("Apenas começando..."),
+            Text("No meio..."),
+            Text("Terminando...")
+          ],
+        ),
+      ),
       bottomNavigationBar: const Text("Botão 1"),
-    ), // Fecha o Scaffold
-  ); // Fecha o MaterialApp
+    ),
+  );
 
   runApp(app);
 }
