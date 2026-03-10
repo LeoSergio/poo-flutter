@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 
 void main() {
   MaterialApp app = MaterialApp(
-    theme: ThemeData(primarySwatch: Colors.teal), // <-- Nova cor aqui!
+    theme: ThemeData
+      (primarySwatch: Colors.teal,
+      fontFamily: 'Georgia', // Define a fonte padrão para o app INTEIRO
+        
+        // Também podemos customizar partes específicas do texto
+      textTheme: const TextTheme(
+      bodyMedium: TextStyle(fontSize: 18.0), // Texto padrão do corpo
+        ),
+      ),
+      
     home: Scaffold(
       appBar: AppBar(
         title: Text("Filmes",
@@ -19,34 +28,38 @@ void main() {
           children: [
             Text("Apenas começando..."),
             Text("No meio..."),
-            Text("Terminando...")
+            Text("Terminando..."),
+
+            Image.network(
+              'https://m.media-amazon.com/images/I/51v5ZpFyaFL._AC_.jpg',
+              height: 300
+            )
           ],
         ),
       ),
       bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
-        children: [
-          ElevatedButton(
-            onPressed: () {}, 
-            child: const Text("Anterior")
-          ),
-          
-          // O IconButton entra aqui!
-          IconButton(
-            icon: const Icon(Icons.favorite), 
-            color: Colors.red, // Deixando o coração vermelho
-            iconSize: 32,      // Ajustando o tamanho
-            onPressed: () => print("Favoritado!"),
-          ),
-
-          ElevatedButton(
-            onPressed: () {}, 
-            child: const Text("Próximo")
-          ),
-        ],
+  children: [
+    Expanded(
+      child: ElevatedButton(onPressed: () {}, child: const Text("Anterior")),
+    ),
+    Expanded(
+      child: IconButton(
+        icon: const Icon(Icons.favorite),
+        color: Colors.red,
+        onPressed: () {},
       ),
+    ),
+    Expanded(
+      child: ElevatedButton(onPressed: () {}, child: const Text("Próximo")),
+    ),
+  ],
+),
     ),
   );
 
   runApp(app);
 }
+
+//questão 7
+
+//questão 7 e 8
