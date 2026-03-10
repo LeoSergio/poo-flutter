@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-//exercicio 2 feito, ir para o 3.
 
 void main() {
   MaterialApp app = MaterialApp(
@@ -24,7 +23,14 @@ void main() {
           ],
         ),
       ),
-      bottomNavigationBar: const Text("Botão 1"),
+      bottomNavigationBar: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,//Espaço entre os itens
+        children: [
+          Text("Botão 1"),
+          Text("Botão 2"),
+          Text("Botão 3"),
+        ],
+      )
     ),
   );
 
