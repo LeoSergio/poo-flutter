@@ -24,23 +24,27 @@ void main() {
         ),
       ),
       bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,//Espaço entre os itens
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
         children: [
-            ElevatedButton(
-              onPressed: () => print("Clicou no 1"),
-              child: const Text("Botão 1")
-            ),
-            ElevatedButton(
-              onPressed: () => print("Clicou no 2"),
-              child: const Text("Botão 2")
-            ),
-            ElevatedButton(
-              onPressed: () => print("Clicou no 3"),
-              child: const Text("Botão 3")
-            ),
-            
-          ],
-      )
+          ElevatedButton(
+            onPressed: () {}, 
+            child: const Text("Anterior")
+          ),
+          
+          // O IconButton entra aqui!
+          IconButton(
+            icon: const Icon(Icons.favorite), 
+            color: Colors.red, // Deixando o coração vermelho
+            iconSize: 32,      // Ajustando o tamanho
+            onPressed: () => print("Favoritado!"),
+          ),
+
+          ElevatedButton(
+            onPressed: () {}, 
+            child: const Text("Próximo")
+          ),
+        ],
+      ),
     ),
   );
 
