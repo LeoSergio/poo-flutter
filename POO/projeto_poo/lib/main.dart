@@ -1,8 +1,32 @@
 import 'package:flutter/material.dart';
 
-// --- Caixa 1: A Barra de Navegação ---
+// --- Caixa 4: A Barra Superior Customizada ---
+class NewAppBar extends AppBar {
+  NewAppBar({super.key}) : super(
+    title: const Text("Dicas"), 
+    centerTitle: true,
+    
+    // O Menu Hambúrguer entra aqui no lado esquerdo (leading)
+    leading: IconButton(
+      icon: const Icon(Icons.menu),
+      onPressed: () => print("Abriu o Menu Lateral!"),
+    ),
+    
+    // A Lupa entra aqui no lado direito (actions)
+    actions: [
+      IconButton(
+        icon: const Icon(Icons.search),
+        onPressed: () => print("Abriu a Pesquisa!"),
+      ),
+    ],
+  );
+}
+
+// --- Caixa 1: A Barra de Navegação Dinâmica ---
 class NewNavBar extends StatelessWidget {
-  NewNavBar();
+  final List<Icon> icones;
+
+  const NewNavBar({super.key, required this.icones});
 
   void botaoFoiTocado(int index) {
     print("Tocaram no botão $index");
@@ -11,46 +35,52 @@ class NewNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      onTap: botaoFoiTocado, 
-      items: const [
-        BottomNavigationBarItem(label: "Cafés", icon: Icon(Icons.coffee_outlined)),
-        BottomNavigationBarItem(label: "Cervejas", icon: Icon(Icons.local_drink_outlined)),
-        BottomNavigationBarItem(label: "Nações", icon: Icon(Icons.flag_outlined))
-      ]
+      onTap: botaoFoiTocado,
+      type: BottomNavigationBarType.fixed, 
+      items: icones.map((icone) => BottomNavigationBarItem(
+        icon: icone,
+        label: "", 
+      )).toList(), 
     );
   }
 }
 
-// --- Caixa 2: A Lista de Bebidas ---
+// --- Caixa 2: A Lista de Bebidas Centralizada ---
 class ListaDeBebidas extends StatelessWidget {
-  ListaDeBebidas();
+  const ListaDeBebidas({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: const [
-        Expanded(child: Text("La Fin Du Monde - Bock - 65 ibu")),
-        Expanded(child: Text("Sapporo Premiume - Sour Ale - 54 ibu")),
-        Expanded(child: Text("Duvel - Pilsner - 82 ibu"))
+        Expanded(child: Center(child: Text("La Fin Du Monde - Bock - 65 ibu"))),
+        Expanded(child: Center(child: Text("Sapporo Premiume - Sour Ale - 54 ibu"))),
+        Expanded(child: Center(child: Text("Duvel - Pilsner - 82 ibu")))
       ]
     );
   }
 }
 
-// --- Caixa 3 (NOVA): O Aplicativo Inteiro ---
-// Ela junta o MaterialApp, o Scaffold e as nossas caixas customizadas.
+// --- Caixa 3: O Aplicativo Inteiro ---
 class MyApp extends StatelessWidget {
-  MyApp();
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       home: Scaffold(
-        appBar: AppBar(title: const Text("Dicas")),
-        // Composição: Chamando as outras classes aqui!
-        body: ListaDeBebidas(), 
-        bottomNavigationBar: NewNavBar(),
+        appBar: NewAppBar(), 
+        body: const ListaDeBebidas(), 
+        
+        // Nossa barra inferior volta a ter apenas o seu propósito principal de navegação
+        bottomNavigationBar: const NewNavBar(
+          icones: [
+            Icon(Icons.coffee_outlined),
+            Icon(Icons.local_drink_outlined),
+            Icon(Icons.flag_outlined),
+          ],
+        ),
       ),
     );
   }
@@ -58,10 +88,5 @@ class MyApp extends StatelessWidget {
 
 // --- O Gatilho Principal ---
 void main() {
-  // Conforme você pediu: instanciamos o objeto e rodamos!
-  MyApp app = MyApp();
-  runApp(app);
-  
-  // Dica: Profissionais geralmente abreviam para uma linha só: 
-  // runApp(MyApp());
+  runApp(const MyApp());
 }
