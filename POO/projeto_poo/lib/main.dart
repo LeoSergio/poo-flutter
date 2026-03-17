@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+class NewNavBar extends StatelessWidget {
+  NewNavBar();
+  void botaoFoiTocado(int index) {
 
-class CaixaDeIconesQueEuMesmoProgramei extends StatelessWidget{
-  CaixaDeIconesQueEuMesmoProgramei();
+    print("Tocaram no botão $index");
+
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(items: const [
+    return BottomNavigationBar(onTap: botaoFoiTocado, items: const [
       BottomNavigationBarItem(
         label: "Cafés",
         icon: Icon(Icons.coffee_outlined),
@@ -43,7 +47,7 @@ void main() {
             child: Text("Duvel - Pilsner - 82 ibu"),
           )
         ]),
-        bottomNavigationBar: CaixaDeIconesQueEuMesmoProgramei(),
+        bottomNavigationBar: NewNavBar(),
       ));
 
   runApp(app);
