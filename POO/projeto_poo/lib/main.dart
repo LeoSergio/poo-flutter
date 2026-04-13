@@ -1,85 +1,176 @@
 import 'package:flutter/material.dart';
 
+
 var dataObjects = [
-  "La Fin Du Monde - Bock - 65 ibu",
+      {
 
-  "Sapporo Premiume - Sour Ale - 54 ibu",
+      "name": "La Fin Du Monde",
 
-  "Duvel - Pilsner - 82 ibu",
-];
+      "style": "Bock",
+
+      "ibu": "65"
+
+    },
+
+    {
+
+      "name": "Sapporo Premiume",
+
+      "style": "Sour Ale",
+
+      "ibu": "54"
+
+    },
+
+    {
+
+      "name": "Duvel", 
+
+      "style": "Pilsner", 
+
+      "ibu": "82"
+
+    }
+
+    ];
+
 
 void main() {
+
   MyApp app = MyApp();
 
   runApp(app);
+
 }
+
+
 
 class MyApp extends StatelessWidget {
+
   @override
+
   Widget build(BuildContext context) {
+
+    
+
     return MaterialApp(
+
       theme: ThemeData(primarySwatch: Colors.deepPurple),
 
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner:false,
 
       home: Scaffold(
-        appBar: AppBar(title: const Text("Dicas")),
 
-        body: DataBodyWidget(objects: dataObjects),
+        appBar: AppBar( 
+
+          title: const Text("Dicas"),
+
+          ),
+
+        body: DataBodyWidget(objects:dataObjects),
 
         bottomNavigationBar: NewNavBar(),
-      ),
-    );
+
+      ));
+
   }
+
 }
+
+
 
 class NewNavBar extends StatelessWidget {
+
   NewNavBar();
 
+
   void botaoFoiTocado(int index) {
+
     print("Tocaram no botão $index");
+
   }
+
 
   @override
+
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      onTap: botaoFoiTocado,
-      items: const [
-        BottomNavigationBarItem(
-          label: "Cafés",
 
-          icon: Icon(Icons.coffee_outlined),
-        ),
+    return BottomNavigationBar(onTap: botaoFoiTocado, items: const [
 
-        BottomNavigationBarItem(
-          label: "Cervejas",
-          icon: Icon(Icons.local_drink_outlined),
-        ),
+      BottomNavigationBarItem(
 
-        BottomNavigationBarItem(
-          label: "Nações",
-          icon: Icon(Icons.flag_outlined),
-        ),
-      ],
-    );
+        label: "Cafés",
+
+        icon: Icon(Icons.coffee_outlined),
+
+      ),
+
+      BottomNavigationBarItem(
+
+          label: "Cervejas", icon: Icon(Icons.local_drink_outlined)),
+
+      BottomNavigationBarItem(label: "Nações", icon: Icon(Icons.flag_outlined))
+
+    ]);
+
   }
+
 }
 
+
 class DataBodyWidget extends StatelessWidget {
-  List<String> objects;
 
-  DataBodyWidget({this.objects = const []});
+  List objects;
 
-  Expanded processarUmElemento(String obj) {
-    return Expanded(child: Center(child: Text(obj)));
-  }
+  DataBodyWidget( {this.objects = const [] });
+
 
   @override
+
   Widget build(BuildContext context) {
-    return Column(
-      children: objects
-          .map((obj) => Expanded(child: Center(child: Text(obj))))
-          .toList(),
-    );
+
+    return DataTable(
+
+      columns: [
+
+        DataColumn(label: Expanded(
+
+          child: Text("Nome", style: TextStyle(fontStyle: FontStyle.italic)),
+
+        )),
+
+        DataColumn(label: Expanded(
+
+          child: Text("Estilo", style: TextStyle(fontStyle: FontStyle.italic)),
+
+        )),
+
+        DataColumn(label: Expanded(
+
+          child: Text("IBU", style: TextStyle(fontStyle: FontStyle.italic)),
+
+        ))
+
+      ],
+
+      rows: objects.map( 
+
+        (obj) => DataRow(
+
+          cells:[
+
+            DataCell(Text(obj["name"])),
+
+            DataCell(Text(obj["style"])),
+
+            DataCell(Text(obj["ibu"]))
+
+            ] 
+
+          )
+
+        ).toList());
+
   }
+
 }
