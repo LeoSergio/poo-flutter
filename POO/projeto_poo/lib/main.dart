@@ -30,6 +30,33 @@ var dataObjects = [
 
       "ibu": "82"
 
+    },
+    {
+
+      "name": "Duvel", 
+
+      "style": "Pilsner", 
+
+      "ibu": "82"
+
+    },
+    {
+
+      "name": "Duvel", 
+
+      "style": "Pilsner", 
+
+      "ibu": "82"
+
+    },
+    {
+
+      "name": "Duvel", 
+
+      "style": "Pilsner", 
+
+      "ibu": "82"
+
     }
 
     ];
@@ -119,54 +146,26 @@ class NewNavBar extends StatelessWidget {
 
 
 class DataBodyWidget extends StatelessWidget {
-
-  List objects;
-
-  DataBodyWidget( {this.objects = const [] });
-
+  final List objects;
+  const DataBodyWidget({super.key, this.objects = const []});
 
   @override
-
   Widget build(BuildContext context) {
-
     var columnNames = ["Nome","Estilo","IBU"],
-
         propertyNames = ["name", "style", "ibu"];
-
     
-
-    return DataTable(
-
-      columns: columnNames.map( 
-
-                (name) => DataColumn(
-
-                  label: Expanded(
-
-                    child: Text(name, style: TextStyle(fontStyle: FontStyle.italic))
-
-                  )
-
-                )
-
-              ).toList()       
-
-      ,
-
-      rows: objects.map( 
-
-        (obj) => DataRow(
-
-            cells: propertyNames.map(
-
-              (propName) => DataCell(Text(obj[propName]))
-
-            ).toList()
-
-          )
-
-        ).toList());
-
+    // SOLUÇÃO: Envolver o DataTable com SingleChildScrollView e usar um box para o tamanho
+    return Expanded( // Necessário porque está dentro de uma Column no Scaffold
+      child: SingleChildScrollView(
+        child: DataTable(
+          columns: columnNames.map((name) => DataColumn(
+            label: Text(name, style: const TextStyle(fontStyle: FontStyle.italic))
+          )).toList(),
+          rows: objects.map((obj) => DataRow(
+            cells: propertyNames.map((propName) => DataCell(Text(obj[propName]))).toList()
+          )).toList()
+        ),
+      ),
+    );
   }
-
 }
