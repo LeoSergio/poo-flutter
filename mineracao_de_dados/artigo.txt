@@ -1,0 +1,76 @@
+Título Provisório: Detecção de Anomalias em Trajetórias Discentes:
+ Uma Abordagem Não-Supervisionada para Identificação de Retenção Severa e Alto Rendimento Atípico.
+
+
+identificar os extremos: alunos com 
+retenção severa e alunos de alto rendimento atípico, a técnica central de 
+Data Mining que você vai utilizar é a Detecção de Anomalias (Outlier Detection).
+
+
+Para resolver esse problema específico (identificar os extremos: alunos com retenção severa e alunos de alto 
+rendimento atípico), a técnica central de Data Mining que você vai utilizar é a Detecção de Anomalias (Outlier Detection).
+
+Dentro do universo da mineração de dados, essa técnica pertence à família do Aprendizado 
+Não-Supervisionado (Unsupervised Learning). Isso significa que você não vai dar ao algoritmo uma base de dados dizendo "este é um aluno ruim" ou "este é um aluno bom". Você vai jogar os dados brutos de todo mundo, e o algoritmo vai te apontar: "estes alunos aqui têm um comportamento matemático completamente diferente dos outros 95% da turma".
+
+Aqui estão os três melhores algoritmos (técnicas específicas) que você pode aplicar para este problema no seu TCC, 
+do mais recomendado ao alternativo:
+1. Isolation Forest (Floresta de Isolamento) - A Melhor Escolha
+
+É de longe o algoritmo mais eficiente e moderno para o seu problema.
+
+    Como funciona: Imagine que você tenta separar todos os alunos fazendo perguntas aleatórias 
+    (ex: "tem mais de 5 trancamentos?", "IRA maior que 8?"). Os alunos "normais", que são a grande 
+    maioria e se parecem muito, vão precisar de dezenas de perguntas para serem separados uns dos outros. Já as anomalias (o aluno que está há 8 anos no curso ou o gênio que passa em tudo com 10) são tão diferentes que, com apenas 2 ou 3 perguntas, eles já ficam isolados do resto do grupo.
+
+    No seu projeto: O algoritmo vai te devolver uma pontuação de anomalia (Anomaly Score). 
+    Quem tiver a pontuação mais extrema é o seu objeto de estudo.
+
+2. DBSCAN (Density-Based Spatial Clustering of Applications with Noise)
+
+Essa é uma técnica baseada em densidade. É excelente se você quiser ver os alunos como "grupos".
+
+    Como funciona: O DBSCAN agrupa pontos de dados que estão muito próximos uns dos outros 
+    (a grande "massa" de alunos normais do curso que seguem o fluxo padrão). Os alunos que ficam em áreas vazias do 
+    gráfico, longe de qualquer grupo denso, são classificados como "Ruído" (Noise).
+
+    No seu projeto: Esses "ruídos" são exatamente as suas anomalias. Metade desse ruído estará no canto do 
+    gráfico de quem tem IRA muito baixo e muito tempo de curso (Retenção), e a outra metade no canto de quem 
+    tem IRA altíssimo e pouco tempo (Alto Rendimento).
+
+3. One-Class SVM (Support Vector Machine de Uma Classe)
+
+    Como funciona: Ele tenta desenhar uma "fronteira" ou um círculo em volta da maioria esmagadora dos dados
+     (o comportamento normal do aluno de Sistemas de Informação). Qualquer aluno que caia fora desse círculo é sinalizado como uma anomalia (-1).
+
+    No seu projeto: É muito útil quando você tem uma base de dados onde o comportamento normal é muito forte
+     e bem definido, e as exceções são raras.
+
+O Segredo para a Técnica Funcionar: Engenharia de Atributos (Feature Engineering)
+
+Atenção aqui: Nenhum desses algoritmos vai funcionar bem se você apenas jogar o histórico bruto de notas neles. 
+A técnica de mineração exige que você primeiro crie indicadores de comportamento.
+
+Antes de rodar o Isolation Forest, você vai precisar usar Python (Pandas) para transformar o histórico do aluno n
+estas colunas (variáveis):
+
+    Índice de Atraso: Semestres cursados menos os semestres ideais até aquele ponto.
+
+    Taxa de Sobrevivência em Gargalos: Quantidade de aprovações nas 5 matérias que mais reprovam no curso.
+
+    Densidade de Matrícula: Média de disciplinas que o aluno tenta cursar por semestre (os retidos severos costumam pegar
+     apenas 1 ou 2 por semestre para não jubilarem).
+
+    Taxa de Desistência em Curso: Proporção de disciplinas trancadas ou canceladas após o período de ajuste.
+
+Resumo do Fluxo da Técnica no seu Artigo:
+
+    Entrada: Dados da UFRN transformados nas variáveis acima.
+
+    Aplicação: Rodar o algoritmo Isolation Forest (usando a biblioteca scikit-learn no Python).
+
+    Saída: O algoritmo rotula os alunos normais como 1 e as anomalias como -1.
+
+    Análise Humana (Seu papel de Pesquisador): Você pega apenas os alunos que tiraram -1. 
+    Vai perceber que eles formam dois pólos opostos. Você analisa o Pólo Negativo (para descobrir 
+    os padrões que levam à evasão tardia) e o Pólo Positivo (para mapear a trilha do sucesso acadêmico).

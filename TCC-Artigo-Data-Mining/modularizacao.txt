@@ -1,0 +1,49 @@
+TCC-Artigo-Data-Mining/
+│
+├── data/                          ← IGNORADO PELO GIT (dados sensíveis)
+│   ├── raw/                       ← CSVs originais da UFRN (imutáveis)
+│   └── processed/                 ← Base achatada gerada por build_features.py
+│
+├── notebooks/                     ← Análises exploratórias (Jupyter/Colab)
+│   ├── 01_eda_tempo_titulacao.ipynb    ← Histograma de semestres e perfil das turmas
+│   └── 02_modelagem_classificacao.ipynb ← Testes de Random Forest e métricas
+│
+├── src/                           ← Código-fonte modular (coração do projeto)
+│   ├── __init__.py
+│   ├── config.py                  ← Caminhos, IDs e parâmetros globais (importe daqui!)
+│   │
+│   ├── data/                      ← ETL: leitura e limpeza dos dados
+│   │   ├── __init__.py
+│   │   ├── extrair.py             ← Lê CSVs robustamente e filtra por curso
+│   │   └── limpar.py              ← Normaliza, calcula semestres e classifica atraso
+│   │
+│   ├── features/                  ← Engenharia de atributos
+│   │   ├── __init__.py
+│   │   └── build_features.py      ← Gera a base achatada com flags e indicadores
+│   │
+│   └── models/                    ← Machine Learning
+│       ├── __init__.py
+│       ├── train.py               ← Treina Random Forest e salva o modelo (.joblib)
+│       └── predict.py             ← Recebe um aluno e retorna a classe de risco
+│
+├── api/                           ← [Fase 2] Sistema de Alerta Precoce (FastAPI)
+│   ├── main.py                    ← Inicializa o servidor FastAPI
+│   └── rotas.py                   ← Endpoints: POST /prever, GET /classes
+│
+├── csv_SI/                        ← Scripts de coleta de dados brutos da UFRN
+│   ├── discentes_SI.py            ← Consolida todos os CSVs de discentes (2009–2026)
+│   ├── csv/
+│   │   ├── discentes/             ← CSVs anuais baixados pelo download_discentes.py
+│   │   ├── download_discentes.py  ← Baixa os CSVs da API de dados abertos da UFRN
+│   │   └── TODOS_ALUNOS_SISTEMAS_INFORMACAO_ID_7191770.0.csv  ← Saída consolidada
+│   └── dashboards/
+│       └── concluintes.py         ← Dashboard Streamlit com histograma de concluintes
+│
+├── models/                        ← IGNORADO PELO GIT (artefatos de ML treinados)
+│   └── random_forest.joblib       ← Modelo treinado (gerado por src/models/train.py)
+│
+├── .gitignore                     ← Protege dados e modelos de serem versionados
+├── requirements.txt               ← Dependências do projeto (pip install -r)
+└── README.md                      ← Documentação e vitrine do TCC
+classificação ser  sera o metodo utilzado artefatos
+predict

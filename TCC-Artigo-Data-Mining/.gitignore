@@ -1,0 +1,36 @@
+# ── Dados brutos e processados (NUNCA versionar dados da UFRN) ────────────────
+data/
+*.csv
+*.xlsx
+*.json
+
+# ── Modelos treinados ─────────────────────────────────────────────────────────
+models/
+*.pkl
+*.joblib
+
+# ── Python ───────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+dist/
+build/
+
+# ── Ambientes virtuais ────────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+
+# ── Jupyter ───────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+
+# ── IDEs ─────────────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+
+# ── Sistema operacional ───────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
