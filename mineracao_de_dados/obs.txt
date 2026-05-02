@@ -1,4 +1,0 @@
-3 - Detecção de Anomalias (Outlier Detection) em Trajetórias Discentes:
-O que caracteriza um aluno de "alto rendimento atípico" (que termina o curso antes
- do tempo ou com notas excepcionais) em comparação com um aluno de "retenção severa" 
- (que está no curso há muito mais tempo que o máximo permitido)?
