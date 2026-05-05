@@ -4,20 +4,16 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class DataService{
+class DataService {
+  final ValueNotifier<List> tableStateNotifier = ValueNotifier([]);
 
-  final ValueNotifier<List> tableStateNotifier = new ValueNotifier([]);
-
-  
-
+  // --- O DESAFIO RESOLVIDO AQUI ---
   void carregar(int index) {
-    if (index == 0) {
-      carregarCafes();
-    } else if (index == 1) {
-      carregarCervejas();
-    } else if (index == 2) {
-      carregarNacoes();
-    }
+    // Colocamos as funções dentro de uma lista na mesma ordem dos botões (0, 1, 2)
+    var acoes = [carregarCafes, carregarCervejas, carregarNacoes];
+    
+    // Executamos a função que está na posição 'index' da lista
+    acoes[index](); 
   }
 
   void carregarCervejas() {
@@ -29,7 +25,6 @@ class DataService{
   }
 
   void carregarCafes() {
-    // Usando "style" e "ibu" obrigatoriamente para a tabela não quebrar (por enquanto)
     tableStateNotifier.value = [
       {"name": "Espresso Tradicional", "style": "Forte", "ibu": "12"},
       {"name": "Cappuccino", "style": "Com Leite", "ibu": "5"},
@@ -38,7 +33,6 @@ class DataService{
   }
 
   void carregarNacoes() {
-    // Usando "ibu" como uma brincadeira para representar algo numérico (ex: população em milhões)
     tableStateNotifier.value = [
       {"name": "Brasil", "style": "América do Sul", "ibu": "214"},
       {"name": "Japão", "style": "Ásia", "ibu": "125"},
