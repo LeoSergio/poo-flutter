@@ -4,27 +4,28 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class DataService {
-  // 1. Voltamos para o Estado Inteligente (Map) que guarda dados e colunas juntos!
   final ValueNotifier<Map<String, dynamic>> tableStateNotifier = ValueNotifier({
     "dataObjects": [],
     "columnNames": [],
     "propertyNames": []
   });
 
-  // 2. O Maestro das chamadas
+  // 1. Nova memória para guardar a quantidade de itens selecionada (começa em 5)
+  final ValueNotifier<int> quantidadeNotifier = ValueNotifier(5);
+
   void carregar(index) {
     if (index == 0) carregarCafes();
     if (index == 1) carregarCervejas();
     if (index == 2) carregarNacoes();
   }
 
-  // 3. Chamada da API de Cervejas
   Future<void> carregarCervejas() async {
     var beersUri = Uri(
       scheme: 'https',
       host: 'random-data-api.com',
       path: 'api/beer/random_beer',
-      queryParameters: {'size': '5'},
+      // 2. Agora o 'size' pega o valor que o usuário escolheu!
+      queryParameters: {'size': '${quantidadeNotifier.value}'},
     );
 
     var jsonString = await http.read(beersUri);
@@ -33,17 +34,16 @@ class DataService {
     tableStateNotifier.value = {
       "dataObjects": beersJson,
       "columnNames": ["Nome", "Estilo", "IBU"],
-      "propertyNames": ["name", "style", "ibu"] // Chaves reais da API de Cervejas
+      "propertyNames": ["name", "style", "ibu"]
     };
   }
 
-  // 4. Chamada da API de Cafés
   Future<void> carregarCafes() async {
     var coffeeUri = Uri(
       scheme: 'https',
       host: 'random-data-api.com',
       path: 'api/coffee/random_coffee',
-      queryParameters: {'size': '5'},
+      queryParameters: {'size': '${quantidadeNotifier.value}'},
     );
 
     var jsonString = await http.read(coffeeUri);
@@ -52,17 +52,16 @@ class DataService {
     tableStateNotifier.value = {
       "dataObjects": coffeeJson,
       "columnNames": ["Nome do Blend", "Origem", "Intensificador"],
-      "propertyNames": ["blend_name", "origin", "intensifier"] // Chaves reais da API de Cafés
+      "propertyNames": ["blend_name", "origin", "intensifier"]
     };
   }
 
-  // 5. Chamada da API de Nações
   Future<void> carregarNacoes() async {
     var nationUri = Uri(
       scheme: 'https',
       host: 'random-data-api.com',
       path: 'api/nation/random_nation',
-      queryParameters: {'size': '5'},
+      queryParameters: {'size': '${quantidadeNotifier.value}'},
     );
 
     var jsonString = await http.read(nationUri);
@@ -71,7 +70,7 @@ class DataService {
     tableStateNotifier.value = {
       "dataObjects": nationJson,
       "columnNames": ["Nacionalidade", "Capital", "Idioma"],
-      "propertyNames": ["nationality", "capital", "language"] // Chaves reais da API de Nações
+      "propertyNames": ["nationality", "capital", "language"]
     };
   }
 }
@@ -90,16 +89,43 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(title: const Text("Dicas da Web")),
+        appBar: AppBar(
+          title: const Text("Dicas da Web"),
+          // 3. Adicionamos a caixa de seleção na direita da AppBar!
+          actions: [
+            const Center(child: Text("Itens: ")),
+            ValueListenableBuilder(
+              valueListenable: dataService.quantidadeNotifier,
+              builder: (_, value, __) {
+                return DropdownButton<int>(
+                  value: value,
+                  iconEnabledColor: Colors.white,
+                  dropdownColor: Colors.deepPurple[100],
+                  underline: Container(), // Remove a linha feia embaixo do botão
+                  onChanged: (int? newValue) {
+                    if (newValue != null) {
+                      // Atualiza a memória quando o usuário escolhe um novo número
+                      dataService.quantidadeNotifier.value = newValue;
+                    }
+                  },
+                  items: const [
+                    DropdownMenuItem(value: 5, child: Text("5")),
+                    DropdownMenuItem(value: 10, child: Text("10")),
+                    DropdownMenuItem(value: 15, child: Text("15")),
+                  ],
+                );
+              }
+            ),
+            const SizedBox(width: 20), // Um espacinho na margem direita
+          ],
+        ),
         body: ValueListenableBuilder(
           valueListenable: dataService.tableStateNotifier,
           builder: (_, value, __) {
-            // Proteção para a primeira vez que o app abre (lista vazia)
             if (value["dataObjects"].isEmpty) {
               return const Center(child: Text("Clique num botão para buscar na internet!"));
             }
 
-            // Desempacotando o estado dinâmico
             return DataTableWidget(
               jsonObjects: value["dataObjects"],
               columnNames: value["columnNames"],
@@ -115,12 +141,9 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// ... As classes NewNavBar e DataTableWidget continuam iguais às que eu te mandei na correção anterior!
-
 class NewNavBar extends HookWidget {
   final _itemSelectedCallback;
 
-  // CORREÇÃO 2: Sintaxe corrigida para a função vazia (adicionado o ponto e vírgula e o '(_)')
   NewNavBar({itemSelectedCallback})
       : _itemSelectedCallback = itemSelectedCallback ?? ((_) {});
 
@@ -165,7 +188,6 @@ class DataTableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // CORREÇÃO 3: SingleChildScrollView no lugar de Expanded dentro da tabela
     return SingleChildScrollView(
       child: DataTable(
         columns: columnNames
@@ -173,7 +195,7 @@ class DataTableWidget extends StatelessWidget {
               (name) => DataColumn(
                 label: Text(
                   name,
-                  style: TextStyle(fontStyle: FontStyle.italic),
+                  style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
               ),
             )
@@ -182,7 +204,6 @@ class DataTableWidget extends StatelessWidget {
             .map(
               (obj) => DataRow(
                 cells: propertyNames
-                    // CORREÇÃO 4: Convertendo tudo para String pra evitar quebrar com números
                     .map((propName) => DataCell(Text(obj[propName]?.toString() ?? "")))
                     .toList(),
               ),
