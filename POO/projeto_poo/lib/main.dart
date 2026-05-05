@@ -5,23 +5,21 @@ var dataObjects = [];
 
 void main() {
   MyApp app = MyApp();
-
   runApp(app);
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Adicionado o print aqui
+    print("no build da classe MyApp");
+
     return MaterialApp(
       theme: ThemeData(primarySwatch: Colors.deepPurple),
-
       debugShowCheckedModeBanner: false,
-
       home: Scaffold(
         appBar: AppBar(title: const Text("Dicas")),
-
         body: DataTableWidget(jsonObjects: dataObjects),
-
         bottomNavigationBar: NewNavBar(),
       ),
     );
@@ -37,6 +35,9 @@ class NewNavBar extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Adicionado o print aqui
+    print("no build da classe NewNavBar");
+    
     var state = useState(1);
 
     return BottomNavigationBar(
@@ -47,15 +48,12 @@ class NewNavBar extends HookWidget {
       items: const [
         BottomNavigationBarItem(
           label: "Cafés",
-
           icon: Icon(Icons.coffee_outlined),
         ),
-
         BottomNavigationBarItem(
           label: "Cervejas",
           icon: Icon(Icons.local_drink_outlined),
         ),
-
         BottomNavigationBarItem(
           label: "Nações",
           icon: Icon(Icons.flag_outlined),
@@ -72,6 +70,9 @@ class DataTableWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Adicionado o print aqui
+    print("no build da classe DataTableWidget");
+
     var columnNames = ["Nome", "Estilo", "IBU"],
         propertyNames = ["name", "style", "ibu"];
 
@@ -88,7 +89,6 @@ class DataTableWidget extends StatelessWidget {
             ),
           )
           .toList(),
-
       rows: jsonObjects
           .map(
             (obj) => DataRow(
