@@ -5,39 +5,52 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class DataService {
-  final ValueNotifier<List> tableStateNotifier = ValueNotifier([]);
+  // O estado agora é um MAPA que contém a lista de dados e as listas de colunas
+  final ValueNotifier<Map<String, dynamic>> tableStateNotifier = ValueNotifier({
+    "dataObjects": [],
+    "columnNames": [],
+    "propertyNames": []
+  });
 
-  // --- O DESAFIO RESOLVIDO AQUI ---
   void carregar(int index) {
-    // Colocamos as funções dentro de uma lista na mesma ordem dos botões (0, 1, 2)
     var acoes = [carregarCafes, carregarCervejas, carregarNacoes];
-    
-    // Executamos a função que está na posição 'index' da lista
-    acoes[index](); 
+    acoes[index]();
   }
 
   void carregarCervejas() {
-    tableStateNotifier.value = [
-      {"name": "La Fin Du Monde", "style": "Bock", "ibu": "65"},
-      {"name": "Sapporo Premiume", "style": "Sour Ale", "ibu": "54"},
-      {"name": "Duvel", "style": "Pilsner", "ibu": "82"}
-    ];
+    tableStateNotifier.value = {
+      "dataObjects": [
+        {"name": "La Fin Du Monde", "style": "Bock", "ibu": "65"},
+        {"name": "Sapporo Premiume", "style": "Sour Ale", "ibu": "54"},
+        {"name": "Duvel", "style": "Pilsner", "ibu": "82"}
+      ],
+      "columnNames": ["Nome", "Estilo", "IBU"],
+      "propertyNames": ["name", "style", "ibu"]
+    };
   }
 
   void carregarCafes() {
-    tableStateNotifier.value = [
-      {"name": "Espresso Tradicional", "style": "Forte", "ibu": "12"},
-      {"name": "Cappuccino", "style": "Com Leite", "ibu": "5"},
-      {"name": "Mocha", "style": "Com Chocolate", "ibu": "8"}
-    ];
+    tableStateNotifier.value = {
+      "dataObjects": [
+        {"nome": "Espresso Tradicional", "torra": "Escura"},
+        {"nome": "Cappuccino", "torra": "Média"},
+        {"nome": "Mocha", "torra": "Clara"}
+      ],
+      "columnNames": ["Nome do Café", "Tipo de Torra"],
+      "propertyNames": ["nome", "torra"] // Novas propriedades!
+    };
   }
 
   void carregarNacoes() {
-    tableStateNotifier.value = [
-      {"name": "Brasil", "style": "América do Sul", "ibu": "214"},
-      {"name": "Japão", "style": "Ásia", "ibu": "125"},
-      {"name": "Alemanha", "style": "Europa", "ibu": "83"}
-    ];
+    tableStateNotifier.value = {
+      "dataObjects": [
+        {"nome": "Brasil", "capital": "Brasília", "populacao": "214 Milhões"},
+        {"nome": "Japão", "capital": "Tóquio", "populacao": "125 Milhões"},
+        {"nome": "Alemanha", "capital": "Berlim", "populacao": "83 Milhões"}
+      ],
+      "columnNames": ["País", "Capital", "População"],
+      "propertyNames": ["nome", "capital", "populacao"] // Novas propriedades!
+    };
   }
 }
 
@@ -60,10 +73,16 @@ class MyApp extends StatelessWidget {
         body: ValueListenableBuilder(
           valueListenable: dataService.tableStateNotifier,
           builder: (_, value, __) {
+            // Se o estado estiver vazio (na primeira vez que abre o app), mostra um texto simples
+            if (value["dataObjects"].isEmpty) {
+              return const Center(child: Text("Clique em um botão para carregar os dados"));
+            }
+
+            // Agora passamos os dados dinamicamente puxando do Map!
             return DataTableWidget(
-              jsonObjects: value,
-              propertyNames: ["name", "style", "ibu"],
-              columnNames: ["Nome", "Estilo", "IBU"],
+              jsonObjects: value["dataObjects"],
+              columnNames: value["columnNames"],
+              propertyNames: value["propertyNames"],
             );
           },
         ),
