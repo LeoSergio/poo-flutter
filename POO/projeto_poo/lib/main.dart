@@ -1,174 +1,239 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 
-class DataService {
-  // O estado agora é um MAPA que contém a lista de dados e as listas de colunas
-  final ValueNotifier<Map<String, dynamic>> tableStateNotifier = ValueNotifier({
-    "dataObjects": [],
-    "columnNames": [],
-    "propertyNames": []
-  });
+class DataService{
 
-  void carregar(int index) {
-    var acoes = [carregarCafes, carregarCervejas, carregarNacoes];
-    acoes[index]();
+  final ValueNotifier<List> tableStateNotifier = new ValueNotifier([]);
+
+  
+
+  void carregar(index){
+
+    if (index == 1) carregarCervejas();
+
   }
 
-  void carregarCervejas() {
-    tableStateNotifier.value = {
-      "dataObjects": [
-        {"name": "La Fin Du Monde", "style": "Bock", "ibu": "65"},
-        {"name": "Sapporo Premiume", "style": "Sour Ale", "ibu": "54"},
-        {"name": "Duvel", "style": "Pilsner", "ibu": "82"}
-      ],
-      "columnNames": ["Nome", "Estilo", "IBU"],
-      "propertyNames": ["name", "style", "ibu"]
-    };
-  }
 
-  void carregarCafes() {
-    tableStateNotifier.value = {
-      "dataObjects": [
-        {"nome": "Espresso Tradicional", "torra": "Escura"},
-        {"nome": "Cappuccino", "torra": "Média"},
-        {"nome": "Mocha", "torra": "Clara"}
-      ],
-      "columnNames": ["Nome do Café", "Tipo de Torra"],
-      "propertyNames": ["nome", "torra"] // Novas propriedades!
-    };
-  }
+  void carregarCervejas(){
 
-  void carregarNacoes() {
-    tableStateNotifier.value = {
-      "dataObjects": [
-        {"nome": "Brasil", "capital": "Brasília", "populacao": "214 Milhões"},
-        {"nome": "Japão", "capital": "Tóquio", "populacao": "125 Milhões"},
-        {"nome": "Alemanha", "capital": "Berlim", "populacao": "83 Milhões"}
-      ],
-      "columnNames": ["País", "Capital", "População"],
-      "propertyNames": ["nome", "capital", "populacao"] // Novas propriedades!
-    };
-  }
+
+
+    tableStateNotifier.value = [{
+
+              "name": "La Fin Du Monde",
+
+              "style": "Bock",
+
+              "ibu": "65"
+
+            },
+
+            {
+
+              "name": "Sapporo Premiume",
+
+              "style": "Sour Ale",
+
+              "ibu": "54"
+
+            },
+
+            {
+
+              "name": "Duvel", 
+
+              "style": "Pilsner", 
+
+              "ibu": "82"
+
+            }
+
+          ];
+
+    }
+
 }
+
 
 final dataService = DataService();
 
 
+
 void main() {
+
   MyApp app = MyApp();
+
   runApp(app);
+
 }
+
 
 class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(primarySwatch: Colors.deepPurple),
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(title: const Text("Dicas")),
-        body: ValueListenableBuilder(
-          valueListenable: dataService.tableStateNotifier,
-          builder: (_, value, __) {
-            // Se o estado estiver vazio (na primeira vez que abre o app), mostra um texto simples
-            if (value["dataObjects"].isEmpty) {
-              return const Center(child: Text("Clique em um botão para carregar os dados"));
-            }
 
-            // Agora passamos os dados dinamicamente puxando do Map!
+
+  @override
+
+  Widget build(BuildContext context) {
+
+    return MaterialApp(
+
+      theme: ThemeData(primarySwatch: Colors.deepPurple),
+
+      debugShowCheckedModeBanner:false,
+
+      home: Scaffold(
+
+        appBar: AppBar( 
+
+          title: const Text("Dicas"),
+
+          ),
+
+        body: ValueListenableBuilder(
+
+          valueListenable: dataService.tableStateNotifier,
+
+          builder:(_, value, __){
+
             return DataTableWidget(
-              jsonObjects: value["dataObjects"],
-              columnNames: value["columnNames"],
-              propertyNames: value["propertyNames"],
+
+              jsonObjects:value, 
+
+              propertyNames: ["name","style","ibu"], 
+
+              columnNames: ["Nome", "Estilo", "IBU"]
+
             );
-          },
+
+          }
+
         ),
+
         bottomNavigationBar: NewNavBar(itemSelectedCallback: dataService.carregar),
-      ),
-    );
+
+      ));
+
   }
+
+
 }
+
+
 
 class NewNavBar extends HookWidget {
-  var itemSelectedCallback; 
 
-  NewNavBar({this.itemSelectedCallback}) {
-    itemSelectedCallback ??= (_) {}; // Correção de segurança: adicionei o (_) para aceitar o parâmetro index
-  }
+  final _itemSelectedCallback;
+
+  NewNavBar({itemSelectedCallback}):
+
+    _itemSelectedCallback = itemSelectedCallback ?? (int){}
+
+    
+
 
   @override
+
   Widget build(BuildContext context) {
+
     var state = useState(1);
 
+    
+
     return BottomNavigationBar(
-      onTap: (index) {
-        state.value = index;           // 1. Atualiza o visual (qual botão tá selecionado)
-        itemSelectedCallback(index);   // 2. Avisa o DataService para fazer a mágica dele!
-      },
+
+      onTap: (index){
+
+        state.value = index;
+
+        _itemSelectedCallback(index);                
+
+      }, 
+
       currentIndex: state.value,
+
       items: const [
+
         BottomNavigationBarItem(
+
           label: "Cafés",
+
           icon: Icon(Icons.coffee_outlined),
+
         ),
+
+
         BottomNavigationBarItem(
-          label: "Cervejas",
-          icon: Icon(Icons.local_drink_outlined),
-        ),
+
+            label: "Cervejas", icon: Icon(Icons.local_drink_outlined)),
+
+
         BottomNavigationBarItem(
-          label: "Nações",
-          icon: Icon(Icons.flag_outlined),
-        ),
-      ],
-    );
+
+          label: "Nações", icon: Icon(Icons.flag_outlined))
+
+      ]);
+
+
   }
+
+
 }
 
+
+
+
 class DataTableWidget extends StatelessWidget {
+
+
   final List jsonObjects;
+
   final List<String> columnNames;
+
   final List<String> propertyNames;
 
-  DataTableWidget({
-    this.jsonObjects = const [],
-    this.columnNames = const ["Nome", "Estilo", "IBU"],
-    this.propertyNames = const ["name", "style", "ibu"],
-  });
+
+  DataTableWidget( {this.jsonObjects = const [], this.columnNames = const ["Nome","Estilo","IBU"], this.propertyNames= const ["name", "style", "ibu"]});
+
 
   @override
+
   Widget build(BuildContext context) {
-    // CORREÇÃO 2: Removido o Expanded de dentro da DataColumn
-    // e adicionado um SingleChildScrollView para evitar transbordamento de tela
-    return SingleChildScrollView(
-      child: DataTable(
-        columns: columnNames
-            .map(
-              (name) => DataColumn(
-                label: Text(
-                  name,
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
-              ),
-            )
-            .toList(),
-        rows: jsonObjects
-            .map(
-              (obj) => DataRow(
-                cells: propertyNames
-                    // CORREÇÃO 3: Prevenção de NullPointerException (.toString() ?? "")
-                    // Se faltar um dado no JSON, a célula fica vazia em vez de quebrar o app!
-                    .map(
-                      (propName) =>
-                          DataCell(Text(obj[propName]?.toString() ?? "")),
-                    )
-                    .toList(),
-              ),
-            )
-            .toList(),
-      ),
-    );
+
+    return DataTable(
+
+      columns: columnNames.map( 
+
+                (name) => DataColumn(
+
+                  label: Expanded(
+
+                    child: Text(name, style: TextStyle(fontStyle: FontStyle.italic))
+
+                  )
+
+                )
+
+              ).toList()       
+
+      ,
+
+      rows: jsonObjects.map( 
+
+        (obj) => DataRow(
+
+            cells: propertyNames.map(
+
+              (propName) => DataCell(Text(obj[propName]))
+
+            ).toList()
+
+          )
+
+        ).toList());
+
   }
+
+
 }
