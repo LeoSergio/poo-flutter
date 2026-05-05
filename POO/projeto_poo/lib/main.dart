@@ -20,31 +20,43 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(title: const Text("Dicas")),
         body: DataTableWidget(jsonObjects: dataObjects),
-        bottomNavigationBar: NewNavBar(),
+        bottomNavigationBar: NewNavBar2(),
       ),
     );
   }
 }
 
-class NewNavBar extends HookWidget {
-  NewNavBar();
+// --- Exercício 2: A Barra usando StatefulWidget nativo ---
+class NewNavBar2 extends StatefulWidget {
+  // A casca do widget. Ela não guarda memória nenhuma.
+  const NewNavBar2({super.key});
 
-  void buttonTapped(int index) {
+  @override
+  State<NewNavBar2> createState() => _NewNavBar2State();
+}
+
+// O "Estado" (A memória da classe). Note o underline (_) indicando que é privada.
+class _NewNavBar2State extends State<NewNavBar2> {
+  // 1. Criamos a variável de estado (equivalente ao useState)
+  int _selectedIndex = 1; 
+
+  void _buttonTapped(int index) {
     print("Tocaram no botão $index");
+    
+    // 2. O famoso setState! 
+    // É ele quem avisa ao Flutter: "Ei, mudei um dado, desenhe a tela de novo!"
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // Adicionado o print aqui
-    print("no build da classe NewNavBar");
-    
-    var state = useState(1);
+    print("no build da classe NewNavBar2");
 
     return BottomNavigationBar(
-      onTap: (index) {
-        state.value = index;
-      },
-      currentIndex: state.value,
+      onTap: _buttonTapped,
+      currentIndex: _selectedIndex, // Usamos a nossa variável de estado aqui
       items: const [
         BottomNavigationBarItem(
           label: "Cafés",
