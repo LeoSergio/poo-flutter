@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http; // CORREÇÃO 1: Import do HTTP
+import 'package:http/http.dart' as http;
 
 class DataService {
-  final ValueNotifier<List> tableStateNotifier = ValueNotifier([]);
+  // 1. Voltamos para o Estado Inteligente (Map) que guarda dados e colunas juntos!
+  final ValueNotifier<Map<String, dynamic>> tableStateNotifier = ValueNotifier({
+    "dataObjects": [],
+    "columnNames": [],
+    "propertyNames": []
+  });
 
+  // 2. O Maestro das chamadas
   void carregar(index) {
-    var res = null;
-    print('carregar #1 - antes de carregarCervejas');
-
-    if (index == 1) res = carregarCervejas();
-    print('carregar #2 - carregarCervejas retornou $res');
+    if (index == 0) carregarCafes();
+    if (index == 1) carregarCervejas();
+    if (index == 2) carregarNacoes();
   }
 
+  // 3. Chamada da API de Cervejas
   Future<void> carregarCervejas() async {
     var beersUri = Uri(
       scheme: 'https',
@@ -22,13 +27,52 @@ class DataService {
       queryParameters: {'size': '5'},
     );
 
-    // Agora o http é reconhecido graças ao import lá em cima
     var jsonString = await http.read(beersUri);
-    print('carregarCervejas #2 - depois do await');
-
     var beersJson = jsonDecode(jsonString);
 
-    tableStateNotifier.value = beersJson;
+    tableStateNotifier.value = {
+      "dataObjects": beersJson,
+      "columnNames": ["Nome", "Estilo", "IBU"],
+      "propertyNames": ["name", "style", "ibu"] // Chaves reais da API de Cervejas
+    };
+  }
+
+  // 4. Chamada da API de Cafés
+  Future<void> carregarCafes() async {
+    var coffeeUri = Uri(
+      scheme: 'https',
+      host: 'random-data-api.com',
+      path: 'api/coffee/random_coffee',
+      queryParameters: {'size': '5'},
+    );
+
+    var jsonString = await http.read(coffeeUri);
+    var coffeeJson = jsonDecode(jsonString);
+
+    tableStateNotifier.value = {
+      "dataObjects": coffeeJson,
+      "columnNames": ["Nome do Blend", "Origem", "Intensificador"],
+      "propertyNames": ["blend_name", "origin", "intensifier"] // Chaves reais da API de Cafés
+    };
+  }
+
+  // 5. Chamada da API de Nações
+  Future<void> carregarNacoes() async {
+    var nationUri = Uri(
+      scheme: 'https',
+      host: 'random-data-api.com',
+      path: 'api/nation/random_nation',
+      queryParameters: {'size': '5'},
+    );
+
+    var jsonString = await http.read(nationUri);
+    var nationJson = jsonDecode(jsonString);
+
+    tableStateNotifier.value = {
+      "dataObjects": nationJson,
+      "columnNames": ["Nacionalidade", "Capital", "Idioma"],
+      "propertyNames": ["nationality", "capital", "language"] // Chaves reais da API de Nações
+    };
   }
 }
 
@@ -46,14 +90,20 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.deepPurple),
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(title: const Text("Dicas")),
+        appBar: AppBar(title: const Text("Dicas da Web")),
         body: ValueListenableBuilder(
           valueListenable: dataService.tableStateNotifier,
           builder: (_, value, __) {
+            // Proteção para a primeira vez que o app abre (lista vazia)
+            if (value["dataObjects"].isEmpty) {
+              return const Center(child: Text("Clique num botão para buscar na internet!"));
+            }
+
+            // Desempacotando o estado dinâmico
             return DataTableWidget(
-              jsonObjects: value,
-              propertyNames: ["name", "style", "ibu"],
-              columnNames: ["Nome", "Estilo", "IBU"],
+              jsonObjects: value["dataObjects"],
+              columnNames: value["columnNames"],
+              propertyNames: value["propertyNames"],
             );
           },
         ),
@@ -64,6 +114,8 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+// ... As classes NewNavBar e DataTableWidget continuam iguais às que eu te mandei na correção anterior!
 
 class NewNavBar extends HookWidget {
   final _itemSelectedCallback;
