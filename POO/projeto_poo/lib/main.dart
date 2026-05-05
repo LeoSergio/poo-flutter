@@ -10,49 +10,41 @@ class DataService{
 
   
 
-  void carregar(index){
-
-    if (index == 1) carregarCervejas();
-
+  void carregar(int index) {
+    if (index == 0) {
+      carregarCafes();
+    } else if (index == 1) {
+      carregarCervejas();
+    } else if (index == 2) {
+      carregarNacoes();
+    }
   }
 
+  void carregarCervejas() {
+    tableStateNotifier.value = [
+      {"name": "La Fin Du Monde", "style": "Bock", "ibu": "65"},
+      {"name": "Sapporo Premiume", "style": "Sour Ale", "ibu": "54"},
+      {"name": "Duvel", "style": "Pilsner", "ibu": "82"}
+    ];
+  }
 
-  void carregarCervejas(){
+  void carregarCafes() {
+    // Usando "style" e "ibu" obrigatoriamente para a tabela não quebrar (por enquanto)
+    tableStateNotifier.value = [
+      {"name": "Espresso Tradicional", "style": "Forte", "ibu": "12"},
+      {"name": "Cappuccino", "style": "Com Leite", "ibu": "5"},
+      {"name": "Mocha", "style": "Com Chocolate", "ibu": "8"}
+    ];
+  }
 
-    tableStateNotifier.value = [{
-
-            "name": "La Fin Du Monde",
-
-            "style": "Bock",
-
-            "ibu": "65"
-
-            },
-
-            {
-
-            "name": "Sapporo Premiume",
-
-            "style": "Sour Ale",
-
-            "ibu": "54"
-
-            },
-
-            {
-
-            "name": "Duvel", 
-
-            "style": "Pilsner", 
-
-            "ibu": "82"
-
-            }
-
-          ];
-
-    }
-
+  void carregarNacoes() {
+    // Usando "ibu" como uma brincadeira para representar algo numérico (ex: população em milhões)
+    tableStateNotifier.value = [
+      {"name": "Brasil", "style": "América do Sul", "ibu": "214"},
+      {"name": "Japão", "style": "Ásia", "ibu": "125"},
+      {"name": "Alemanha", "style": "Europa", "ibu": "83"}
+    ];
+  }
 }
 
 final dataService = DataService();
@@ -88,10 +80,10 @@ class MyApp extends StatelessWidget {
 }
 
 class NewNavBar extends HookWidget {
-  var itemSelectedCallback; //esse atributo será uma função
+  var itemSelectedCallback; 
 
   NewNavBar({this.itemSelectedCallback}) {
-    itemSelectedCallback ??= () {};
+    itemSelectedCallback ??= (_) {}; // Correção de segurança: adicionei o (_) para aceitar o parâmetro index
   }
 
   @override
@@ -100,15 +92,8 @@ class NewNavBar extends HookWidget {
 
     return BottomNavigationBar(
       onTap: (index) {
-        state.value = index;
-        itemSelectedCallback(index);
-        carregarCervejas();
-        twitter.value = [
-          // CORREÇÃO 1: Trocado "Style" por "style"
-          {"name": "La Fin Du Monde", "style": "Bock", "ibu": "65"},
-          {"name": "Sapporo Premiume", "style": "Sour Ale", "ibu": "54"},
-          {"name": "Duvel", "style": "Pilsner", "ibu": "82"},
-        ];
+        state.value = index;           // 1. Atualiza o visual (qual botão tá selecionado)
+        itemSelectedCallback(index);   // 2. Avisa o DataService para fazer a mágica dele!
       },
       currentIndex: state.value,
       items: const [
